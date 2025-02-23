@@ -5,8 +5,17 @@
       <h2>Menu</h2>
       <ul>
         <li><i class="fas fa-home"></i> Home</li>
-        <li><i class="fas fa-chart-line"></i> Analytics</li>
-        <li><i class="fas fa-cog"></i> Settings</li>
+        <li>
+          <i class="fas fa-chart-line"></i> <router-link to="/budget">Budget Table</router-link>
+        </li>
+        <li>
+          <i class="fas fa-chart-bar"></i>
+          <router-link to="/budget-charts">Budget Analytics</router-link>
+        </li>
+        <li>
+          <i class="fas fa-chart-line"></i>
+          <router-link to="/terms-and-conditions">Terms and Conditions</router-link>
+        </li>
       </ul>
     </div>
 

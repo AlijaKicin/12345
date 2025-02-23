@@ -26,6 +26,21 @@ if (empty($username) || empty($password)) {
     exit;
 }
 
+// Provjeri da li je korisničko ime "admin" i lozinka "admin"
+if ($username === 'admin' && $password === 'admin') {
+    // Automatski prijavi admina
+    echo json_encode([
+        'success' => true,
+        'message' => 'Login successful',
+        'user' => [
+            'id' => 0, // Možeš koristiti poseban ID za admina
+            'username' => 'admin',
+            'tip_korisnika_id' => 1, // Pretpostavljamo da je 1 ID za admina
+        ],
+    ]);
+    exit;
+}
+
 // Pripremi SQL upit za dohvat korisnika prema korisničkom imenu
 $stmt = $pdo->prepare("SELECT * FROM korisnici WHERE korisnicko_ime = :username");
 $stmt->bindParam(':username', $username);
@@ -36,7 +51,15 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user && password_verify($password, $user['lozinka'])) {
     // Ako je lozinka ispravna, prijava je uspješna
-    echo json_encode(['success' => true, 'message' => 'Login successful']);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Login successful',
+        'user' => [
+            'id' => $user['id'],
+            'username' => $user['korisnicko_ime'],
+            'tip_korisnika_id' => $user['tip_korisnika_id'],
+        ],
+    ]);
 } else {
     // Ako korisnik ne postoji ili lozinka nije ispravna
     echo json_encode(['success' => false, 'message' => 'Invalid username or password']);

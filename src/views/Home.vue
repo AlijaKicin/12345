@@ -4,12 +4,23 @@
     <p>Please choose an option:</p>
     <button @click="$router.push('/login')">Login</button>
     <button @click="$router.push('/register')">Register</button>
+    <button @click="$router.push('/guest-budget')">Enter as Guest</button>
+    <!-- Dodajemo gumb za goste -->
   </div>
 </template>
 
 <script>
 export default {
   name: 'HomeView',
+  methods: {
+    enterAsGuest() {
+      // Postavimo korisnika kao gosta u local storage
+      localStorage.setItem('currentUser', JSON.stringify({ role: 'guest' }))
+
+      // Preusmjeri gosta na stranicu s tabelom
+      this.$router.push('/budget')
+    },
+  },
 }
 </script>
 

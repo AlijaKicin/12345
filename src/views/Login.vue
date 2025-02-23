@@ -18,6 +18,9 @@
 
     <!-- Prikazivanje greške ako prijava nije uspjela -->
     <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
+
+    <!-- Link za registraciju -->
+    <p>Don't have an account? <router-link to="/register">Register here</router-link>.</p>
   </div>
 </template>
 
@@ -25,7 +28,7 @@
 import axios from 'axios' // Dodaj axios za slanje HTTP zahtjeva
 
 export default {
-  name: 'LoginPage', // Promjena imena komponente na 'LoginPage'
+  name: 'LoginPage',
   data() {
     return {
       username: '',
@@ -43,13 +46,21 @@ export default {
         })
 
         if (response.data.success) {
-          // Ako je prijava uspješna, preusmjeri na about stranicu
-          this.$router.push('/about')
+          // Ako je prijava uspješna, spremi korisnika u local storage
+          localStorage.setItem('currentUser', JSON.stringify(response.data.user))
+
+          // Preusmjeri na odgovarajuću stranicu ovisno o ulozi korisnika
+          if (response.data.user.tip_korisnika_id === 1) {
+            this.$router.push('/admin') // Admin stranica
+          } else {
+            this.$router.push('/about') // Korisnička stranica
+          }
         } else {
           // Ako prijava nije uspjela, prikaži grešku
           this.errorMessage = 'Invalid username or password.'
         }
-      } catch {
+      } catch (error) {
+        console.error('Login error:', error)
         this.errorMessage = 'An error occurred. Please try again.'
       }
     },

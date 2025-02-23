@@ -29,5 +29,11 @@ $query = $pdo->prepare("
 $query->execute([$korisnik_id]);
 $transakcije = $query->fetchAll(PDO::FETCH_ASSOC);
 
+// Pretvori iznos u broj (float) za svaku transakciju
+$transakcije = array_map(function ($transakcija) {
+    $transakcija['iznos'] = (float) $transakcija['iznos']; // Pretvori iznos u broj
+    return $transakcija;
+}, $transakcije);
+
 echo json_encode(['success' => true, 'data' => $transakcije]);
 ?>

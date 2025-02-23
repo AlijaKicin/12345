@@ -25,10 +25,18 @@ if (!$korisnik_id || !$kategorija_id || !$iznos || !$tip) {
     exit;
 }
 
+// Provjeri je li iznos broj
+if (!is_numeric($iznos)) {
+    echo json_encode(['success' => false, 'message' => 'Amount must be a number.']);
+    exit;
+}
+
 // Unesi podatke u tablicu transakcije
 $query = $pdo->prepare("INSERT INTO transakcije (korisnik_id, kategorija_id, iznos, tip, opis) VALUES (?, ?, ?, ?, ?)");
 if ($query->execute([$korisnik_id, $kategorija_id, $iznos, $tip, $opis])) {
-    echo json_encode(['success' => true, 'message' => 'Transaction saved successfully.']);
+    // Vrati ID unesene transakcije
+    $id = $pdo->lastInsertId();
+    echo json_encode(['success' => true, 'message' => 'Transaction saved successfully.', 'id' => $id]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Failed to save transaction.']);
 }
